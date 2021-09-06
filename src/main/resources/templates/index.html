@@ -6,7 +6,11 @@
 </head>
 <body>
 <div th:insert="common/header.html" id="header"></div>
+
+<a th:href="@{/login}"> login </a> <!-- give request /login-->
 <a th:href="@{/list}"> list </a> <!-- give request /list-->
+
 <div th:insert="common/footer.html" id="footer"></div>
+
 </body>
 </html>

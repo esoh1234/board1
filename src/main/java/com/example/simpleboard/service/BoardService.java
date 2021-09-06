@@ -18,6 +18,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BoardService {
 
+    private static final int POST_PER_PAGE = 4;
+
     @Transactional
     public List<BoardDto> getBoardlist(Integer pageNum) {
         Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum-1,POST_PER_PAGE));
@@ -39,16 +41,22 @@ public class BoardService {
         return boardDtoList;
     }
 
-//    @Transactional
-//    public List<Integer> getPageList(){
-//        Long numberOfPost = boardRepository.count();
-//        List<Integer> a= new ArrayList<>();
-//
-//        for(int i=1;i<=numberOfPost;i++)
-//            a.add(i);
-//
-//        return 0;
-//    }
+    @Transactional
+    public List<Integer> getPageList(){
+        int numberOfPost = (int)boardRepository.count();
+
+        List<Integer> pageList= new ArrayList();
+        //List<Integer> b= new ArrayList();
+        System.out.println((int) Math.ceil(numberOfPost/POST_PER_PAGE));
+        for(int i=1;i<= (int) Math.ceil(((double)numberOfPost)/POST_PER_PAGE);i++)
+            pageList.add(i);
+
+        System.out.println(pageList);
+        System.out.println(numberOfPost);
+        return pageList;
+
+        //return 0;
+    }
 
     private BoardRepository boardRepository;
 
@@ -57,10 +65,6 @@ public class BoardService {
         boardDto.setCreatedDate(LocalDateTime.now());
         return boardRepository.save(boardDto.toEntity()).getId();
     }
-
-    private static final int POST_PER_PAGE=4;
-
-
 
     @Transactional
     public BoardDto getPost(Long no) {

@@ -34,16 +34,19 @@ public class BoardController {
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value="p", defaultValue = "1") Integer pageNum){
         List<BoardDto> boardList= boardService.getBoardlist(pageNum);
-        //List<Integer> pageList=boardService.getPageList();
+        List<Integer> pageList= boardService.getPageList();
 
         model.addAttribute("boardList",boardList);
-        //model.addAttribute("pageList",pageList);
+        model.addAttribute("pageList",pageList);
 
-        List<Integer> sample = new ArrayList();
-        sample.add(1);
-        sample.add(2);
-        model.addAttribute("pageList",sample);
-        System.out.println(pageNum);
+//        List<Integer> sample = new ArrayList();
+//        sample.add(1);
+//        sample.add(2);
+//        model.addAttribute("pageList",sample);
+
+
+
+        //System.out.println(pageNum);
 
         return "board/list.html";
     }
