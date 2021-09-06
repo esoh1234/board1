@@ -1,0 +1,32 @@
+spring:
+  devtools:
+    liverelad:
+      enabled: true
+    freemaker:
+      cache: false
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springboot-project?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: abcd
+  jpa:
+    #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: none #if i use create here, db always initialize.
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

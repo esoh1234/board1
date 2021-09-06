@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${boardDto.title}">abcd</title>
+</head>
+<body>
+    <fieldset>
+        <form action="/editing/ + ${boardDto.id}" th:method="put">
+        <legend>Posting</legend>
+            <input type="hidden" name="id" th:value="${boardDto.id}"/>
+        Title : <input type="text" name="title" th:value="${boardDto.title}"><br>
+        Writer : <input type="text" name="author" th:value="${boardDto.author}"><br>
+        <textarea rows = "5" cols = "40" name="content" th:text="${boardDto.content}"></textarea>
+
+        <br>
+
+        <input type="submit" value="Edit Complete">
+        </form>
+    </fieldset>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${boardDto.title}">abcd</title>
+</head>
+<body>
+    <ul> <h2><span th:text="${boardDto.title}"></span></h2>
+
+        <li>
+            <span th:text="'posted by '"></span>
+            <i><span th:text="${boardDto.author}"></span></i>
+        </li>
+        <li>
+            <span th:text="${#temporals.format(boardDto.createdDate,'yyyy년 MM월 dd일 hh시 mm분')}"></span>
+        </li>
+    </ul>
+    <p th:utext="${#strings.replace(boardDto.content, '&#10;','&lt;br&gt;')}"></p>
+
+    <div>
+    <form th:action="@{'/edit/' + ${boardDto.id}}" th:method="get">
+        <button>Edit</button>
+    </form>
+
+    <form th:action="@{'/delete/' + ${boardDto.id}}" th:method="delete">
+    <button>Delete</button>
+    </form>
+    </div>
+</body>
+
+</html>

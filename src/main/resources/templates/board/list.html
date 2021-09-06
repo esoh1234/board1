@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Board List</title>
+</head>
+<body>
+    <div th:insert="common/header.html" id="header"></div>
+
+    <ul> <h2>Board List</h2>
+        <li th:each="board : ${boardList}">
+            <span th:text="'#'+${board.id}"></span>
+            <a th:href="@{'/post/' + ${board.id}}"><span th:text="${board.title}"></span></a>
+            <span class = "italic" th:text="'  | posted by ' "/>
+            <i><span th:text=" ${board.author}"/></i>
+            <span th:text="'  |  ' + ${#temporals.format(board.createdDate,'yyyy년 MM월 dd일')} " ></span>
+            <!--                <a th:href="@{'/delete/' + ${board.id}}" th:method="delete">    -->
+
+<!--            <a th:href="@{'/editing/ + ${board.id}}">-->
+<!--                Modify-->
+<!--            </a>-->
+
+            <a th:href="@{'/delete/' + ${board.id}}">
+                Delete
+            </a>
+
+        </li>
+    </ul>
+
+    <div>
+        <span th:each="pageNum : ${pageList}" th:inline="text">
+            <a th:href="@{'/list/?p=' + ${pageNum}}">[[${pageNum}]]</a>
+        </span>
+    </div>
+
+    <a th:href="@{/posting}"> Write </a>
+    <div th:insert="common/footer.html" id="footer"></div>
+</body>
+</html><!--${#temporals.format(board.createdDate},'yy년 MM월 dd일 HH시')}-->
