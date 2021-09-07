@@ -12,7 +12,6 @@ import java.util.List;
 
 @Controller //Autodetection
 @AllArgsConstructor
-
 public class BoardController {
     private BoardService boardService;
 

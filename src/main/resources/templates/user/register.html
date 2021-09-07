@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<form  th:action="@{/user/register}" method="post">
+  ID : <input type="text" name="memberID"> <br>
+  Password : <input type="password" name="password"> <br><br>
+
+  Nickname : <input type="text" name="memberName"> <br>
+  <!--    Nickname : <input type="password" name="memberName"> <br>-->
+  <input type="submit" value="Register">
+</form>
+</body>
+</html>

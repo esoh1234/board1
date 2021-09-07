@@ -27,6 +27,7 @@ public class BoardEntity extends TimeEntity{
     @Column(columnDefinition = "TEXT")
     private String content;
 
+
     @Builder
     public BoardEntity(Long id, String title, String author, String content){
         this.id=id;

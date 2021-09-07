@@ -10,7 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Getter@Setter@ToString@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class BoardDto {
     private Long id;
     private String title;
@@ -18,6 +21,8 @@ public class BoardDto {
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
+    // 4
 
     public BoardEntity toEntity(){
         return BoardEntity.builder()
@@ -37,5 +42,4 @@ public class BoardDto {
         this.createdDate=createdDate;
         this.modifiedDate=modifiedDate;
     }
-
 }

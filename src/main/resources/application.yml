@@ -1,6 +1,6 @@
 spring:
   devtools:
-    liverelad:
+    livereload:
       enabled: true
     freemaker:
       cache: false
@@ -15,7 +15,7 @@ spring:
     show-sql: true
     hibernate:
       format_sql: true
-      ddl-auto: none #if i use create here, db always initialize.
+      ddl-auto: update #if i use create here, db always initialize.
   mvc:
     hiddenmethod:
       filter:
