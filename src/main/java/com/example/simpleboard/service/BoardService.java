@@ -20,6 +20,11 @@ public class BoardService {
 
     private static final int POST_PER_PAGE = 4;
 
+    /**
+     *
+     * @param pageNum
+     * @return
+     */
     @Transactional
     public List<BoardDto> getBoardlist(Integer pageNum) {
         Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum-1,POST_PER_PAGE));
@@ -41,18 +46,22 @@ public class BoardService {
         return boardDtoList;
     }
 
+    /**
+     * paging List
+     * @return
+     */
     @Transactional
     public List<Integer> getPageList(){
         int numberOfPost = (int)boardRepository.count();
 
         List<Integer> pageList= new ArrayList();
         //List<Integer> b= new ArrayList();
-        System.out.println((int) Math.ceil(numberOfPost/POST_PER_PAGE));
+        //System.out.println((int) Math.ceil(numberOfPost/POST_PER_PAGE));
         for(int i=1;i<= (int) Math.ceil(((double)numberOfPost)/POST_PER_PAGE);i++)
             pageList.add(i);
 
-        System.out.println(pageList);
-        System.out.println(numberOfPost);
+        //System.out.println(pageList);
+        //System.out.println(numberOfPost);
         return pageList;
 
         //return 0;

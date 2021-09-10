@@ -2,30 +2,106 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${boardDto.title}">abcd</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>abcd</title>
+<!--    template ref https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=reciperoad2017_2b06&logNo=221099576479-->
 </head>
+
 <body>
-    <ul> <h2><span th:text="${boardDto.title}"></span></h2>
+<div>
+<p hidden id="pageNo" th:text="${no}"></p>
+</div>
+<div class="container">
+    <hr/>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-condensed">
+                <thead>
+                <tr align="center">
+                    <th width="10%">제목</th>
+                    <th id = "title" width="60%" ></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>작성일
+                    </td>
+                    <td id = "cdate">
 
-        <li>
-            <span th:text="'posted by '"></span>
-            <i><span th:text="${boardDto.author}"></span></i>
-        </li>
-        <li>
-            <span th:text="${#temporals.format(boardDto.createdDate,'yyyy년 MM월 dd일 hh시 mm분')}"></span>
-        </li>
-    </ul>
-    <p th:utext="${#strings.replace(boardDto.content, '&#10;','&lt;br&gt;')}"></p>
-
-    <div>
-    <form th:action="@{'/edit/' + ${boardDto.id}}" th:method="get">
-        <button>Edit</button>
-    </form>
-
-    <form th:action="@{'/delete/' + ${boardDto.id}}" th:method="delete">
-    <button>Delete</button>
-    </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>글쓴이
+                    </td>
+                    <td>
+                        <span id="writer"></span>
+                        <span style='float:right'>조회 : 0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p id="content"></p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <td>
+                        <span style='float:right'>
+                            <a href="/list"><button type="button" id="list" class="btn btn-default">목록</button></a>
+                            <button type="button" id="modify" class="btn btn-default">수정</button>
+                            <button type="button" id="delete" class="btn btn-default">삭제</button>
+                            <button type="button" id="write" class="btn btn-default">글쓰기</button>
+                        </span>
+                    </td>
+                </tr>
+                </thead>
+            </table>
+        </div>
     </div>
+</div>
+
 </body>
 
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js "></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            dataType:"json",
+            url : "/api/list/"+$("#pageNo").text(),
+            success: function(data) {
+                //alert("성공! ");
+                //alert($("#pageNo").text());
+                $("#title").append(data.title);
+                $("#cdate").append(data.createdDate);
+                $("#writer").append(data.author);
+                $("#content").append(data.content);
+            },
+            error: function(){alert("앗? 잘못된 접근입니다.");}
+        });
+        $("#delete").on("click",function(){
+            var confirmDelete = confirm("정말로 삭제하시겠습니까?")
+            if(confirmDelete){
+                $.ajax({
+                    type: "delete",
+                    dataType: "json",
+                    url: "/list/" + $("#pageNo").text(),
+                    success: function(data){
+                        if (data.success) {  //as you are passing true/false from server side.
+                            alert("게시글이 삭제되었습니다.");
+                        } else {
+                            alert("오류에 인하여 삭제가 안되었습니다");
+                        }
+                    }
+                    //error: function(){alert("삭제에 실패하였습니다");}
+                });
+            }
+        })
+    });
+
+</script>
 </html>

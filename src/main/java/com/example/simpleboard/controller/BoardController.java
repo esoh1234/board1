@@ -6,6 +6,7 @@ import com.example.simpleboard.dto.BoardDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,53 +18,38 @@ public class BoardController {
 
     @GetMapping("/")
     public String index(){
-//  To understand a type of List or array.
-//        ArrayList<Integer> a= new ArrayList();
-//        a.add(1);
-//        a.add(2);
-//        System.out.println(a);
-//
-//        Integer[] b = new Integer[3];
-//        b[1]=1;
-//        b[2]=2;
-//        System.out.println(b[1]);
         return "/index.html";
     }
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value="p", defaultValue = "1") Integer pageNum){
-        List<BoardDto> boardList= boardService.getBoardlist(pageNum);
-        List<Integer> pageList= boardService.getPageList();
-
-        model.addAttribute("boardList",boardList);
-        model.addAttribute("pageList",pageList);
-
-//        List<Integer> sample = new ArrayList();
-//        sample.add(1);
-//        sample.add(2);
-//        model.addAttribute("pageList",sample);
-
-
-
-        //System.out.println(pageNum);
-
-        return "board/list.html";
+    public String list(){
+        return "/board/list.html";
     }
 
-    @GetMapping("/posting")
+    @GetMapping("/list/{no}")
+    public String post(@PathVariable("no") Long no, Model model){
+        model.addAttribute("no", no);
+        return "/board/post.html";
+    }
+
+    @GetMapping("/list/newpost")
     public String post(){
-        return "board/posting.html";
+        return "/board/newpost.html";
     }
 
-    @GetMapping("/post/{no}")
-    public String post(@PathVariable("no") Long no, Model model) {
-        BoardDto boardDTO = boardService.getPost(no);
-        System.out.println(boardDTO);
-        model.addAttribute("boardDto", boardDTO);
-        return "board/post.html";
+    @DeleteMapping("/list/{no}")
+    public String deletePost(@PathVariable("no") Long no){
+        boardService.deletePost(no);
+        return "redirect:/list";
     }
 
     @PostMapping("/posting")
+    public String posting(@RequestBody BoardDto boardDto){;
+        //System.out.println(boardDto);
+        boardService.savePost(boardDto);
+        return "redirect:/list";
+    }
+    /*@PostMapping("/posting")
     public String post(BoardDto boardDto){;
         boardService.savePost(boardDto);
         return "redirect:/list";
@@ -84,19 +70,5 @@ public class BoardController {
         //System.out.println(boardDto);
         boardService.savePost(boardDto);
         return "redirect:/list";
-    }
-
-    @DeleteMapping("/delete/{no}")
-    public String deletePost(@PathVariable("no") Long no){
-        boardService.deletePost(no);
-        return "redirect:/list";
-    }
-
-    //Do I need to make another method below to do this?
-    @GetMapping("/delete/{no}")
-    public String deletePostwithGET(@PathVariable("no") Long no){
-        boardService.deletePost(no);
-        return "redirect:/list";
-    }
-
+    }*/
 }

@@ -3,37 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <title>Board List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="css/bootstrap.css">-->
 </head>
 <body>
     <div th:insert="common/header.html" id="header"></div>
+    <table id="BoardTable" class="table table-striped">
+        <thead>
+            <td>글번호</td>
+            <td>제목</td>
+            <td>쟉성자</td>
+            <td>작성일</td>
+        </thead>
 
-    <ul> <h2>Board List</h2>
-        <li th:each="board : ${boardList}">
-            <span th:text="'#'+${board.id}"></span>
-            <a th:href="@{'/post/' + ${board.id}}"><span th:text="${board.title}"></span></a>
-            <span class = "italic" th:text="'  | posted by ' "/>
-            <i><span th:text=" ${board.author}"/></i>
-            <span th:text="'  |  ' + ${#temporals.format(board.createdDate,'yyyy년 MM월 dd일')} " ></span>
-            <!--                <a th:href="@{'/delete/' + ${board.id}}" th:method="delete">    -->
+        <tbody id="tbody">
 
-<!--            <a th:href="@{'/editing/ + ${board.id}}">-->
-<!--                Modify-->
-<!--            </a>-->
-
-            <a th:href="@{'/delete/' + ${board.id}}">
-            Delete
-            </a>
-
-        </li>
-    </ul>
-
-    <div>
-        <span th:each="pageNum : ${pageList}" th:inline="text">
-            <a th:href="@{'/list/?p=' + ${pageNum}}">[[${pageNum}]]</a>
-        </span>
-    </div>
-
-    <a th:href="@{/posting}"> Write </a>
+        </tbody>
+    </table>
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <td>
+                        <span style='float:left'>
+                            <a href="/list/newpost"><button type="button" id="write" class="btn btn-default">글쓰기 </button></a>
+                        </span>
+            </td>
+        </tr>
+        </thead>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul id="pagination" class="pagination">
+<!--            <li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
+<!--            <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--            <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+<!--            <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--            <li class="page-item"><a class="page-link" href="#">Next</a></li>-->
+        </ul>
+    </nav>
     <div th:insert="common/footer.html" id="footer"></div>
+    <span id="test"></span>
 </body>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js "></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            dataType:"json",
+            url : "/api/list/p",
+            success: function(data) {
+                //var jdata=JSON.stringify(data);
+                let addRow="";
+                let str="";
+                $("#tbody").empty();
+                for (let i = 0; i < data.length; i++) {
+                    // for (var [key,value] of Object.entries(data[i])){
+                    //     addRow += (key!="content" && key!="modifiedDate" )?"<td>"+ value +"</td>":"";
+                    // }
+                    //I think just board case is this the better
+                    addRow+= '<tr><td>'+ data[i].id +'</td><td><a href="\\list\\' + data[i].id
+                        + '">' + data[i].title +'</a></td><td>' + data[i].author +'</td><td>'
+                        + data[i].createdDate +'</td></tr>';
+                }
+                $("#tbody").append(addRow);
+            },
+            error: function(error){
+                alert("error");
+            }
+        });
+        $.ajax({
+            type: "GET",
+            dataType:"json",
+            url : "/api/page",
+            success: function(data) {
+                let addPage="";
+                $("#test").text(data.length);
+
+                for (let i = 0; i < data.length; i++) {
+
+                    //addPage+="<li className=\"page-item\"><a className=\"page-link\" href=\"\list\\"+ i+1 + ">"+ i+1 + "</a></li>";
+                    addPage+='<li class=\"page-item\"><span id=\"pagebtn'+(i+1)+'\" class=\"page-link\">'+ (i+1) +'</span></li>';
+                }
+                $("#pagination").append(addPage);
+            },
+             
+            error: function(error){
+                alert("error");
+            }
+        });
+        $().on('click','',)
+        //some issue happens such that event after append doesn't work. then 'on' must be here.
+        $("#pagination").on('click','.page-link',function(){
+            $.ajax({
+                type: "GET", //"POST" is right?
+                dataType: "json",//, If i use dataType "json", server is not json
+                url : "/api/list/p/"+($(".page-link").index(this)+1),
+                //data: JSON.stringify({"ab":"abc"}),
+                //if I use "data" instead of "body", it gives error.
+                success: function(data) {
+                    $("#tbody").empty();
+                    //var jdata=JSON.stringify(data);
+                    let addRow="";
+                    let str="";
+                    for (let i = 0; i < data.length; i++) {
+                        // for (var [key,value] of Object.entries(data[i])){
+                        //     addRow += (key!="content" && key!="modifiedDate" )?"<td>"+ value +"</td>":"";
+                        // }
+                        //I think just board case is this the better
+                        addRow+= '<tr><td>'+ data[i].id +'</td><td><a href="\\list\\' + data[i].id
+                            + '">' + data[i].title +'</a></td><td>' + data[i].author +'</td><td>'
+                            + data[i].createdDate +'</td></tr>';
+                    };
+                    $("#tbody").append(addRow);
+                },
+                error : function(){alert("fail");}
+            });
+         });
+
+    });
+</script>
 </html><!--${#temporals.format(board.createdDate},'yy년 MM월 dd일 HH시')}-->

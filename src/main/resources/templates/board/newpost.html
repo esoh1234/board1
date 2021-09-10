@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Board List</title>
+</head>
+<body>
+<div class="container">
+    <hr/>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th width="10%">제목</th>
+                    <td><input id = "title"  type="text" name="title"><br></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>글쓴이
+                    </td>
+                    <td>
+                        <input type="text" id="writer">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea rows = "5" cols = "40" id="content"></textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <td>
+                        <span style='float:right'>
+                            <a href="/list"><button type="button" id="list" class="btn btn-default">목록</button></a>
+                            <button type="button" id="write" class="btn btn-default">작성완료</button>
+                        </span>
+                    </td>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js "></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#write").click(function() {
+            var obj=new Object();
+            obj.title=$("#title").val();
+            obj.author=$("#writer").val();
+            obj.content=$("#content").val();
+            //alert(JSON.stringify(obj));
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                url : "/posting",
+                data : JSON.stringify(obj),
+                // success : function(data){
+                //     if (data.success) {  //as you are passing true/false from server side.
+                //         alert("1게시글이 입력었습니다.");
+                //     } else {
+                //         alert("1게시글 입력에 실패하였습니다.");
+                //     }
+                //     window.location.replace("redirect:/list");
+                // },
+                // error : function(data) {
+                //     if (data.success) {  //as you are passing true/false from server side.
+                //         alert("2게시글이 입력었습니다.");
+                //     } else {
+                //         alert("2게시글 입력에 실패하였습니다.");
+                //     }
+                //     window.location.replace("redirect:/list");
+                // }
+                //Serve must send to view, it is success
+                // success: function(data){
+                //     alert(JSON.stringify(obj));
+                //     alert("hello");
+                // },
+                // error: function(data){
+                //     alert("게시글 생성에 실패하였습니다.");
+                //     alert(JSON.stringify(obj));
+                // }
+            });
+        });
+    });
+</script>
+
+</html>

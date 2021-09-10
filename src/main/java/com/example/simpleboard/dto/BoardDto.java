@@ -3,7 +3,9 @@ package com.example.simpleboard.dto;
 import java.time.LocalDateTime;
 
 import com.example.simpleboard.domain.entity.BoardEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -19,6 +21,7 @@ public class BoardDto {
     private String title;
     private String author;
     private String content;
+    @JsonFormat(pattern="yyyy년MM월dd일 HH시mm분")
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 

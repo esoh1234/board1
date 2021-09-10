@@ -7,9 +7,9 @@
 <body>
 <div th:insert="common/header.html" id="header"></div>
 
-<a sec:authorize = "isAnonymous()" th:href="@{/user/login}"> login </a> <br>
+<!--<a sec:authorize = "isAnonymous()" th:href="@{/user/login}"> login </a> <br>
 <a sec:authorize = "isAnonymous()" th:href="@{/user/register}"> register </a> <br>
-<a sec:authorize = "isAuthenticated()" th:href="@{/user/logout}"> logout </a> <br>
+<a sec:authorize = "isAuthenticated()" th:href="@{/user/logout}"> logout </a> <br>-->
 
 <!--<a th:href="@{/user/login}"> login </a> &lt;!&ndash; give request /login&ndash;&gt;<br>-->
 <a th:href="@{/list}"> list </a> <!-- give request /list-->
@@ -17,6 +17,7 @@
 <div th:insert="common/footer.html" id="footer"></div>
 
 </body>
+
 </html>
 
 <!--<!DOCTYPE html>-->
