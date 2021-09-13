@@ -35,6 +35,7 @@ public class BoardDto {
     @ApiModelProperty(value="수정 시간")
     private LocalDateTime modifiedDate;
 
+    private Long updateViews;
     // 4
 
     public BoardEntity toEntity(){
@@ -43,15 +44,17 @@ public class BoardDto {
                 .title(title)
                 .author(author)
                 .content(content)
+                .updateViews(updateViews)
                 .build();
     }
 
     @Builder
-    public BoardDto(Long id, String title, String author, String content, LocalDateTime createdDate, LocalDateTime modifiedDate){
+    public BoardDto(Long id, String title, String author, String content, Long updateViews, LocalDateTime createdDate, LocalDateTime modifiedDate){
         this.id=id;
         this.author=author;
         this.title=title;
         this.content=content;
+        this.updateViews=updateViews;
         this.createdDate=createdDate;
         this.modifiedDate=modifiedDate;
     }

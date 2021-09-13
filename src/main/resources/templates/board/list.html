@@ -63,6 +63,9 @@
     #thPostDate {
         width: 10%;
     }
+    #thPostViews {
+        width: 5%;
+    }
 </style>
 </head>
 <body>
@@ -74,6 +77,7 @@
             <th id="thPostTitle">제목</th>
             <th id="thAuthor">쟉성자</th>
             <th id="thPostDate">작성일</th>
+            <th id="thPostViews">조회수</th>
         </thead>
 
         <tbody id="tbody" class="boardST">
@@ -125,7 +129,8 @@
                     //I think just board case is this the better
                     addRow+= '<tr class="BoardTr"><td>'+ data[i].id +'</td><td class="bTitle"><a href="\\list\\' + data[i].id
                         + '">' + data[i].title +'</a></td><td>' + data[i].author +'</td><td>'
-                        + data[i].createdDate +'</td></tr>';
+                        + data[i].createdDate +'</td><td>'+ data[i].updateViews + '</td></tr>';
+                    //alert(JSON.stringify(data[i]));
                 }
                 $("#tbody").append(addRow);
             },
@@ -181,7 +186,7 @@
                         //I think just board case is this the better
                         addRow+= '<tr class="BoardTr"><td>'+ data[i].id +'</td><td class="bTitle"><a href="\\list\\' + data[i].id
                             + '">' + data[i].title +'</a></td><td>' + data[i].author +'</td><td>'
-                            + data[i].createdDate +'</td></tr>';
+                            + data[i].createdDate +'</td><td>'+ data[i].updateViews + '</td></tr>';
                     };
                     $("#tbody").append(addRow);
                     //alert($("#pagination").eq(selectedPage).parent(".page-item").index());

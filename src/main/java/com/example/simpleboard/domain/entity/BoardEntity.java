@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -35,15 +36,24 @@ public class BoardEntity extends TimeEntity{
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(columnDefinition ="integer default 0")
+    private Long updateViews = 0L;
+
 //    @Column(columnDefinition = "number")
 //    private Long postviews;
 
+    @PrePersist //영속되기전
+    public void prePersist() {
+        this.updateViews = this.updateViews == null ? 0 : this.updateViews;
+    }
+
     @Builder
-    public BoardEntity(Long id, String title, String author, String content){
+    public BoardEntity(Long id, String title, String author, String content,Long updateViews){
         this.id=id;
         this.title=title;
         this.author=author;
         this.content=content;
+        this.updateViews=updateViews;
     }
 
 }

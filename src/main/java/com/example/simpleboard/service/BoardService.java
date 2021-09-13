@@ -47,6 +47,7 @@ public class BoardService {
                     .title(boardEntity.getTitle())
                     .author(boardEntity.getAuthor())
                     .content(boardEntity.getContent())
+                    .updateViews(boardEntity.getUpdateViews())
                     .createdDate(boardEntity.getCreatedDate())
                     .build();
             //System.out.println(boardEntity.getCreatedDate());
@@ -63,18 +64,10 @@ public class BoardService {
     @Transactional
     public List<Integer> getPageList(){
         int numberOfPost = (int)boardRepository.count();
-
         List<Integer> pageList= new ArrayList();
-        //List<Integer> b= new ArrayList();
-        //System.out.println((int) Math.ceil(numberOfPost/POST_PER_PAGE));
         for(int i=1;i<= (int) Math.ceil(((double)numberOfPost)/POST_PER_PAGE);i++)
             pageList.add(i);
-
-        //System.out.println(pageList);
-        //System.out.println(numberOfPost);
         return pageList;
-
-        //return 0;
     }
 
     private BoardRepository boardRepository;
@@ -95,9 +88,11 @@ public class BoardService {
                 .title(boardEntity.getTitle())
                 .author(boardEntity.getAuthor())
                 .content(boardEntity.getContent())
+                .updateViews(boardEntity.getUpdateViews()+1) //for the counting
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
 
+        boardRepository.save(boardDto.toEntity()).getId(); //For the view counting.
         //System.out.println(boardEntity.getCreatedDate());
 
         return boardDto;

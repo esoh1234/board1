@@ -40,7 +40,7 @@
                     </td>
                     <td>
                         <span id="writer"></span>
-                        <span style='float:right'>조회 : 0</span>
+                        <span id="viewcounter" style='float:right'>조회 : </span>
                     </td>
                 </tr>
                 <tr>
@@ -85,6 +85,7 @@
                 $("#cdate").append(data.createdDate);
                 $("#writer").append(data.author);
                 $("#content").append(data.content);
+                $("#viewcounter").append(data.updateViews);
             },
             error: function(){alert("앗? 잘못된 접근입니다.");}
         });
