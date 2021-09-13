@@ -5,10 +5,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>abcd</title>
 <!--    template ref https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=reciperoad2017_2b06&logNo=221099576479-->
+    <style>
+        .btn-default{
+            border-color: lightgray;
+        }
+    </style>
 </head>
 
 <body>
-<div>
+<div id="hidden">
 <p hidden id="pageNo" th:text="${no}"></p>
 </div>
 <div class="container">
@@ -51,9 +56,9 @@
                     <td>
                         <span style='float:right'>
                             <a href="/list"><button type="button" id="list" class="btn btn-default">목록</button></a>
-                            <button type="button" id="modify" class="btn btn-default">수정</button>
+                            <a th:href="@{'/edit/list/'+${no}}"> <button type="button" id="modify" class="btn btn-default">수정</button></a>
                             <button type="button" id="delete" class="btn btn-default">삭제</button>
-                            <button type="button" id="write" class="btn btn-default">글쓰기</button>
+                            <a href="/list/newpost"><button type="button" id="write" class="btn btn-default">글쓰기</button></a>
                         </span>
                     </td>
                 </tr>
@@ -84,23 +89,23 @@
             error: function(){alert("앗? 잘못된 접근입니다.");}
         });
         $("#delete").on("click",function(){
-            var confirmDelete = confirm("정말로 삭제하시겠습니까?")
+            var confirmDelete = confirm("정말로 삭제하시겠습니까?");
             if(confirmDelete){
                 $.ajax({
                     type: "delete",
-                    dataType: "json",
-                    url: "/list/" + $("#pageNo").text(),
-                    success: function(data){
-                        if (data.success) {  //as you are passing true/false from server side.
-                            alert("게시글이 삭제되었습니다.");
-                        } else {
-                            alert("오류에 인하여 삭제가 안되었습니다");
-                        }
+                    url: "/api/list/" + $("#pageNo").text(),
+                    success: function(data) {
+                        alert("게시글이 삭제되었습니다.");
+                        location.href = "../list";
+                    },
+                    error:{
+                        function(){alert("오류에 인하여 삭제가 안되었습니다");}
                     }
                     //error: function(){alert("삭제에 실패하였습니다");}
                 });
             }
         })
+
     });
 
 </script>

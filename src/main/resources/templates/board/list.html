@@ -5,18 +5,78 @@
     <title>Board List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <!--    <link rel="stylesheet" href="css/bootstrap.css">-->
+<style>
+    a{
+        color: black;
+    }
+    a:hover {
+        color: black;
+        text-decoration:none;
+        cursor:pointer;
+    }
+    body {
+        padding: 20px;
+    }
+    #pagination:hover{
+        cursor:pointer;
+    }
+    .selectedPage{
+        font-weight: bold;
+    }
+    #BoardTable {
+        table-layout: fixed;
+        /*font-size: 15px;*/
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid lightgray;
+        vertical-align: middle;
+
+    }
+    .btn-default{
+        border-color: lightgray;
+    }
+    #BoardTable td{
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid lightgray !important;
+        line-height: 3px;
+        /*height: 10px !important;*/
+    }
+    .bTitle{
+        padding: 20px !important;
+        text-align: left !important;
+    }
+    th{
+        text-align: center;
+        height: 10px;
+        border: 1px solid lightgray !important;
+    }
+    #thPostNO{
+        width: 5%;
+    }
+    #thPostTitle{
+        width: 40%;
+    }
+    #thAuthor {
+        width: 10%;
+    }
+    #thPostDate {
+        width: 10%;
+    }
+</style>
 </head>
 <body>
+
     <div th:insert="common/header.html" id="header"></div>
     <table id="BoardTable" class="table table-striped">
         <thead>
-            <td>글번호</td>
-            <td>제목</td>
-            <td>쟉성자</td>
-            <td>작성일</td>
+            <th id="thPostNO">글번호</th>
+            <th id="thPostTitle">제목</th>
+            <th id="thAuthor">쟉성자</th>
+            <th id="thPostDate">작성일</th>
         </thead>
 
-        <tbody id="tbody">
+        <tbody id="tbody" class="boardST">
 
         </tbody>
     </table>
@@ -24,9 +84,9 @@
         <thead>
         <tr>
             <td>
-                        <span style='float:left'>
-                            <a href="/list/newpost"><button type="button" id="write" class="btn btn-default">글쓰기 </button></a>
-                        </span>
+                <span style='float:left'>
+                    <a href="/list/newpost"><button type="button" id="write" class="btn btn-default">글쓰기 </button></a>
+                </span>
             </td>
         </tr>
         </thead>
@@ -46,6 +106,7 @@
 
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js "></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 <script>
     $(document).ready(function(){
         $.ajax({
@@ -62,7 +123,7 @@
                     //     addRow += (key!="content" && key!="modifiedDate" )?"<td>"+ value +"</td>":"";
                     // }
                     //I think just board case is this the better
-                    addRow+= '<tr><td>'+ data[i].id +'</td><td><a href="\\list\\' + data[i].id
+                    addRow+= '<tr class="BoardTr"><td>'+ data[i].id +'</td><td class="bTitle"><a href="\\list\\' + data[i].id
                         + '">' + data[i].title +'</a></td><td>' + data[i].author +'</td><td>'
                         + data[i].createdDate +'</td></tr>';
                 }
@@ -72,6 +133,7 @@
                 alert("error");
             }
         });
+        //Pagination
         $.ajax({
             type: "GET",
             dataType:"json",
@@ -86,15 +148,20 @@
                     addPage+='<li class=\"page-item\"><span id=\"pagebtn'+(i+1)+'\" class=\"page-link\">'+ (i+1) +'</span></li>';
                 }
                 $("#pagination").append(addPage);
+                $("#pagination").children().eq(0).removeClass('page-item').addClass('page-item active');
             },
              
             error: function(error){
                 alert("error");
             }
         });
-        $().on('click','',)
+        //Page C;ick
         //some issue happens such that event after append doesn't work. then 'on' must be here.
         $("#pagination").on('click','.page-link',function(){
+            var selectedPage=$(".page-link").index(this);
+            $("#pagination").children().css("font-weight", "normal");
+            $("#pagination").children().removeClass('page-item active').addClass('page-item');
+            //$("#pagination).chil"<span className="sr-only">(current)</span>
             $.ajax({
                 type: "GET", //"POST" is right?
                 dataType: "json",//, If i use dataType "json", server is not json
@@ -102,6 +169,7 @@
                 //data: JSON.stringify({"ab":"abc"}),
                 //if I use "data" instead of "body", it gives error.
                 success: function(data) {
+
                     $("#tbody").empty();
                     //var jdata=JSON.stringify(data);
                     let addRow="";
@@ -111,16 +179,23 @@
                         //     addRow += (key!="content" && key!="modifiedDate" )?"<td>"+ value +"</td>":"";
                         // }
                         //I think just board case is this the better
-                        addRow+= '<tr><td>'+ data[i].id +'</td><td><a href="\\list\\' + data[i].id
+                        addRow+= '<tr class="BoardTr"><td>'+ data[i].id +'</td><td class="bTitle"><a href="\\list\\' + data[i].id
                             + '">' + data[i].title +'</a></td><td>' + data[i].author +'</td><td>'
                             + data[i].createdDate +'</td></tr>';
                     };
                     $("#tbody").append(addRow);
+                    //alert($("#pagination").eq(selectedPage).parent(".page-item").index());
+                    $("#pagination").children().eq(selectedPage).removeClass('page-item').addClass('page-item active');
+                    $("#pagination").children().eq(selectedPage).css("font-weight", "bold");
                 },
                 error : function(){alert("fail");}
             });
          });
-
     });
 </script>
-</html><!--${#temporals.format(board.createdDate},'yy년 MM월 dd일 HH시')}-->
+<style>
+    .bTitle{
+        text-align: left;
+    }
+</style>
+</html>

@@ -1,5 +1,6 @@
 package com.example.simpleboard.controller;
 
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import com.example.simpleboard.service.BoardService;
 import com.example.simpleboard.dto.BoardDto;
@@ -11,10 +12,17 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(description="REST API")
 @Controller //Autodetection
 @AllArgsConstructor
 public class BoardController {
     private BoardService boardService;
+
+    @GetMapping("/list/{no}")
+    public String post(@PathVariable("no") Long no, Model model){
+        model.addAttribute("no", no);
+        return "/board/post.html";
+    }
 
     @GetMapping("/")
     public String index(){
@@ -26,49 +34,17 @@ public class BoardController {
         return "/board/list.html";
     }
 
-    @GetMapping("/list/{no}")
-    public String post(@PathVariable("no") Long no, Model model){
-        model.addAttribute("no", no);
-        return "/board/post.html";
-    }
-
     @GetMapping("/list/newpost")
-    public String post(){
+    public String list(Model model){
+        model.addAttribute("no",new Long(0));
         return "/board/newpost.html";
     }
 
-    @DeleteMapping("/list/{no}")
-    public String deletePost(@PathVariable("no") Long no){
-        boardService.deletePost(no);
-        return "redirect:/list";
+    @GetMapping("/edit/list/{no}")
+    public String edit(@PathVariable("no")Long no, Model model){
+        model.addAttribute("no",no);
+        return "/board/newpost.html";
     }
 
-    @PostMapping("/posting")
-    public String posting(@RequestBody BoardDto boardDto){;
-        //System.out.println(boardDto);
-        boardService.savePost(boardDto);
-        return "redirect:/list";
-    }
-    /*@PostMapping("/posting")
-    public String post(BoardDto boardDto){;
-        boardService.savePost(boardDto);
-        return "redirect:/list";
-    }
 
-    @GetMapping("/edit/{no}")
-    public String edit(@PathVariable("no") Long no, Model model){;
-        BoardDto boardDTO = boardService.getPost(no);
-        //System.out.println(boardDTO);
-        model.addAttribute("boardDto", boardDTO);
-        return "board/editing.html";
-    }
-
-    @PutMapping("/editing/{no}")
-    //i guessed i should recieve no(number). but no, maybe because of "Put"Mapping?.
-    //Nope, boardDTO has "id" data. hidden id is came from view.
-    public String edit(BoardDto boardDto){
-        //System.out.println(boardDto);
-        boardService.savePost(boardDto);
-        return "redirect:/list";
-    }*/
 }

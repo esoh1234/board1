@@ -3,9 +3,13 @@ package com.example.simpleboard.service;
 import com.example.simpleboard.domain.entity.BoardEntity;
 import com.example.simpleboard.domain.repository.BoardRepository;
 import com.example.simpleboard.dto.BoardDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,20 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@ApiModel(value="BoardService", description="Board Sevice")
 @Service
 @AllArgsConstructor
 public class BoardService {
 
-    private static final int POST_PER_PAGE = 4;
+    private static final int POST_PER_PAGE = 10;
 
     /**
      *
      * @param pageNum
      * @return
      */
+    @ApiModelProperty(value="게시글 ")
     @Transactional
     public List<BoardDto> getBoardlist(Integer pageNum) {
-        Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum-1,POST_PER_PAGE));
+//        int numberOfPost= (int)boardRepository.count();
+//        Integer totalPage= (int) Math.ceil(((double)numberOfPost)/POST_PER_PAGE);
+//        Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(totalPage-pageNum+1,POST_PER_PAGE));
+        Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum-1,POST_PER_PAGE, Sort.by("id").descending()));
 
         List<BoardEntity> boardEntities = page.getContent();
         List<BoardDto> boardDtoList = new ArrayList<>();
@@ -43,6 +52,7 @@ public class BoardService {
             //System.out.println(boardEntity.getCreatedDate());
             boardDtoList.add(boardDto);
         }
+
         return boardDtoList;
     }
 

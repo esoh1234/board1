@@ -2,9 +2,12 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Board List</title>
 </head>
 <body>
+<div id="hiddenPlace"> <p hidden id="pageNo" th:text="${no}"></p>
+    <input type="hidden" id="hiddenNo"></div>
 <div class="container">
     <hr/>
     <div class="row">
@@ -51,44 +54,68 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function(){
+        console.log($("#pageNo").text());
+        if($("#pageNo").text()!="0"){ //from modifying
+            //alert($("#pageNo").text());
+            $.ajax({
+                type: "GET",
+                dataType:"json",
+                url : "/api/list/"+$("#pageNo").text(),
+                success: function(data){
+                    $("#hiddenNo").val(data.id);
+                    $("#title").val(data.title);
+                    $("#content").val(data.content);
+                    $("#writer").val(data.author);
+                }
+            })
+        }
         $("#write").click(function() {
             var obj=new Object();
             obj.title=$("#title").val();
             obj.author=$("#writer").val();
             obj.content=$("#content").val();
             //alert(JSON.stringify(obj));
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                url : "/posting",
-                data : JSON.stringify(obj),
-                // success : function(data){
-                //     if (data.success) {  //as you are passing true/false from server side.
-                //         alert("1게시글이 입력었습니다.");
-                //     } else {
-                //         alert("1게시글 입력에 실패하였습니다.");
-                //     }
-                //     window.location.replace("redirect:/list");
-                // },
-                // error : function(data) {
-                //     if (data.success) {  //as you are passing true/false from server side.
-                //         alert("2게시글이 입력었습니다.");
-                //     } else {
-                //         alert("2게시글 입력에 실패하였습니다.");
-                //     }
-                //     window.location.replace("redirect:/list");
-                // }
-                //Serve must send to view, it is success
-                // success: function(data){
-                //     alert(JSON.stringify(obj));
-                //     alert("hello");
-                // },
-                // error: function(data){
-                //     alert("게시글 생성에 실패하였습니다.");
-                //     alert(JSON.stringify(obj));
-                // }
-            });
+            if($("#pageNo").text()!="0"){
+                obj.id=$("#pageNo").text();
+                //alert(JSON.stringify(obj));
+                $.ajax({
+                    type: "PUT",
+                    //dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    url: "/api/edit/list/"+$("#pageNo").text(),
+                    data: JSON.stringify(obj),
+                    success : function(data){
+                        window.location.href="../../list";
+                    },
+                    error : function(data, error) {
+                        alert("수정에 실패했습니다.");
+                    }
+                })
+            }else {
+                $.ajax({
+                    type: "POST",
+                    //dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    url: "/api/posting",
+                    data: JSON.stringify(obj),
+                    success : function(data, error){
+                        alert("게시글이 입력었습니다.");
+                        window.location.href="../list";
+                    },
+                    error : function(data, error) {
+                        alert("게시글 입력에 실패하였습니다.");
+                    }
+                    //Serve must send to view, it is success
+                    // success: function(data){
+                    //     alert(JSON.stringify(obj));
+                    //     alert("hello");
+                    // },
+                    // error: function(data){
+                    //     alert("게시글 생성에 실패하였습니다.");
+                    //     alert(JSON.stringify(obj));
+                    // }
+                });
+            }
         });
     });
 </script>
